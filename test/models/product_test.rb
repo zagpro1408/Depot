@@ -24,22 +24,43 @@ class ProductTest < ActiveSupport::TestCase
     )
 
     # Задается цена меньше 0
-    # Валидация должна выдать false, а product.invalid? false
+    # Валидация должна выдать false, а product.invalid? true
     product.price = -1
     assert product.invalid?
-    assert_equal ["must be greater than or equal to 0.01"],
+    assert_equal ["должен быть минимум 0,01"],
       product.errors[:price]
 
     # Задается цена 0
-    # Валидация должна выдать false, а product.invalid? false
+    # Валидация должна выдать false, а product.invalid? true
     product.price = 0
     assert product.invalid?
-    assert_equal ["must be greater than or equal to 0.01"],
+    assert_equal ["должен быть минимум 0,01"],
       product.errors[:price]
 
     # Задается валидная цена
     # Валидация должна выдать true, а product.valid? тоже true
     product.price = 1
+    assert product.valid?
+  end
+
+  # Тест: длина title равна или больще 10
+  test "product title length must be greater than or equal to 9" do
+    product = Product.new(
+      description:  'yyy',
+      image_url:    'zzz.jpg',
+      price:        '10.00'
+    )
+
+    # Задается название продукта с длиной название меньше 10
+    # Валидация должна выдать false, а product.invalid? true
+    product.title = 'Book'
+    assert product.invalid?
+    assert_equal ["должен содержать минимум 10 символов"],
+      product.errors[:title]
+
+    # Задается валидное название продукту
+    # Валидация должна выдать true, а product.valid? тоже true
+    product.title = 'The Biggest Book'
     assert product.valid?
   end
 
