@@ -1,4 +1,7 @@
 class Product < ApplicationRecord
+  has_many :line_items
+
+  before_destroy :ensure_not_referenced_by_any_line_item
 
   # Проверка на то, чтобы поле не было пустым
   validates :title, :description, :image_url, :price, presence: {
@@ -23,4 +26,15 @@ class Product < ApplicationRecord
     with: %r{\.(gif|jpg|png)\Z}i,
     message: 'URL должен указывать на изображение формата GIF, JPG или PNG.'
   }
+
+  private
+
+  # Убеждаемся в отсутствии товарных позиций, ссылающихся на данный товар
+  def ensure_not_referenced_by_any_line_item
+    unless line_items.empty?
+      errors.add(:base, 'Line Items present')
+      throw :abort
+    end
+  end
+
 end
