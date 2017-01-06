@@ -28,11 +28,17 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
+    # Новый объект заказа, который инициализируется данными формы
     @order = Order.new(order_params)
+    # К заказу добавляются товарные позиции, хранящиеся в корзине
+    @order.add_line_items_from_cart(@cart)
 
     respond_to do |format|
       if @order.save
-        format.html { redirect_to @order, notice: 'Order was successfully created.' }
+        Cart.destroy(session[:cart_id])
+        session[:cart_id] = nil
+        format.html { redirect_to store_index_url, notice:
+          'Thank you for your order.' }
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }
