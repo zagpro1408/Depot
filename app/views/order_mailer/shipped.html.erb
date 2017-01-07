@@ -1,5 +1,8 @@
-<h1>Order#shipped</h1>
-
+<h3>Pragmatic Order Shipped</h3>
 <p>
-  <%= @greeting %>, find me in app/views/order_mailer/shipped.html.erb
+  Это сообщение уведомляет Вас, что мы отправили ваш недавний заказ:
 </p>
+<table>
+  <tr><th colspan="2">Qty</th><th>Описание</th></tr>
+<%= render @order.line_items -%>
+</table>
