@@ -1,6 +1,9 @@
 class LineItemsController < ApplicationController
   # Включили модуль для определения или создания корзины
   include CurrentCart
+
+  skip_before_action :authorize, only: :create
+
   # Метод должен быть вызван до действия create()
   before_action :set_cart, only: [:create]
 
